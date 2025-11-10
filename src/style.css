@@ -511,6 +511,17 @@ body {
   background: var(--warning-color);
 }
 
+.domain-link {
+  color: var(--text-secondary);
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+.domain-link:hover {
+  color: var(--primary-light);
+  text-decoration: underline;
+}
+
 /* Toast Notifications */
 .toast {
   position: fixed;

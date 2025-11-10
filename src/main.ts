@@ -77,15 +77,22 @@ function createCopyableId(id: string, label: string, className: string = 'resour
 function renderDomains(domains: Domain[] | undefined): string {
   if (!domains || domains.length === 0) return '';
 
-  const domainItems = domains.map(domain => `
-    <div class="domain-item">
-      <span class="domain-badge ${domain.https ? 'https' : 'http'}">
-        ${domain.https ? 'HTTPS' : 'HTTP'}
-      </span>
-      <span>${domain.host}${domain.path !== '/' ? domain.path : ''}</span>
-      ${domain.port ? `<span style="color: var(--text-muted);">:${domain.port}</span>` : ''}
-    </div>
-  `).join('');
+  const domainItems = domains.map(domain => {
+    const protocol = domain.https ? 'https' : 'http';
+    const url = `${protocol}://${domain.host}${domain.path !== '/' ? domain.path : ''}`;
+
+    return `
+      <div class="domain-item">
+        <span class="domain-badge ${domain.https ? 'https' : 'http'}">
+          ${domain.https ? 'HTTPS' : 'HTTP'}
+        </span>
+        <a href="${url}" target="_blank" rel="noopener noreferrer" class="domain-link">
+          ${domain.host}${domain.path !== '/' ? domain.path : ''}
+        </a>
+        ${domain.port ? `<span style="color: var(--text-muted);">:${domain.port}</span>` : ''}
+      </div>
+    `;
+  }).join('');
 
   return `
     <div class="domains-list">
@@ -142,6 +149,9 @@ function renderApplications(apps: Application[] | undefined, container: HTMLElem
       const details = document.createElement('div');
       details.className = 'resource-details';
       details.innerHTML = `
+        ${renderDetail('GitHub ID', app.githubId)}
+        ${renderDetail('Registry ID', app.registryId)}
+        ${renderDetail('Server ID', app.serverId)}
         ${renderDetail('Build Type', app.buildType)}
         ${renderDetail('Source Type', app.sourceType)}
         ${renderDetail('Repository', app.repository)}

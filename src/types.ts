@@ -25,6 +25,9 @@ export interface Application {
   env?: string;
   domains?: Domain[];
   createdAt?: string;
+  githubId?: string;
+  registryId?: string;
+  serverId?: string;
 }
 
 export interface Compose {
