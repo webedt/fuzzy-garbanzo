@@ -7,10 +7,16 @@
 ### After Git Push
 - **ALWAYS** display the deployment URL after a successful `git push`
 - The deployment URL format is: `https://{repo-name}-{branch-name}.etdofresh.com`
-  - Repository name: `supreme-spoon`
+  - Repository name: `fuzzy-garbanzo`
   - Branch name: Current branch (lowercase, special chars replaced with hyphens)
-  - Example: `https://supreme-spoon-claude-add-sidebar-pages-011cuzvwtxvc5aagjgbmt3eh.etdofresh.com`
+  - Example: `https://fuzzy-garbanzo-claude-add-sidebar-pages-011cuzvwtxvc5aagjgbmt3eh.etdofresh.com`
 - Display the URL as a clickable markdown link
+- **ALWAYS** also display a link to the GitHub repository with the current branch
+  - GitHub repository link format: `https://github.com/{owner}/{repo}/tree/{branch}`
+  - Owner: `webedt`
+  - Repository: `fuzzy-garbanzo`
+  - Example: `https://github.com/webedt/fuzzy-garbanzo/tree/claude/das-feature-011CV15ip5jo1A31LbE47ahH`
+- Display the GitHub link as a clickable markdown link
 - Remind the user that the deployment will be live once the GitHub Actions workflow completes
 
 ## Overview
