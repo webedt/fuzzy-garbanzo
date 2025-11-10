@@ -73,23 +73,6 @@ function createCopyableId(id: string, label: string, className: string = 'resour
   return idEl;
 }
 
-// Render primary URL prominently
-function renderPrimaryUrl(domains: Domain[] | undefined): string {
-  if (!domains || domains.length === 0) return '';
-
-  const primaryDomain = domains[0];
-  const protocol = primaryDomain.https ? 'https' : 'http';
-  const url = `${protocol}://${primaryDomain.host}${primaryDomain.path !== '/' ? primaryDomain.path : ''}`;
-
-  return `
-    <div class="primary-url">
-      <a href="${url}" target="_blank" rel="noopener noreferrer" class="url-link">
-        ${url}
-      </a>
-    </div>
-  `;
-}
-
 // Render domains
 function renderDomains(domains: Domain[] | undefined): string {
   if (!domains || domains.length === 0) return '';
@@ -162,13 +145,6 @@ function renderApplications(apps: Application[] | undefined, container: HTMLElem
       header.appendChild(nameDiv);
       header.appendChild(createCopyableId(app.applicationId, 'Application ID'));
       item.appendChild(header);
-
-      // Add primary URL prominently
-      if (app.domains && app.domains.length > 0) {
-        const urlDiv = document.createElement('div');
-        urlDiv.innerHTML = renderPrimaryUrl(app.domains);
-        item.appendChild(urlDiv);
-      }
 
       const details = document.createElement('div');
       details.className = 'resource-details';
