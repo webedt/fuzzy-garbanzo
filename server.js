@@ -80,7 +80,8 @@ app.get('/health', (req, res) => {
 });
 
 // Serve index.html for all other routes (SPA fallback)
-app.get('*', (req, res) => {
+// Use middleware instead of wildcard route for Express 5 compatibility
+app.use((req, res) => {
   res.sendFile(join(__dirname, 'dist', 'index.html'));
 });
 
