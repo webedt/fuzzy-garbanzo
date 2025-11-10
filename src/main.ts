@@ -8,6 +8,36 @@ import type {
   Domain,
 } from './types';
 
+// localStorage key for API key
+const STORAGE_KEY_API_KEY = 'dokploy_api_key';
+
+// localStorage utility functions
+function saveApiKey(apiKey: string): void {
+  try {
+    localStorage.setItem(STORAGE_KEY_API_KEY, apiKey);
+  } catch (error) {
+    console.error('Failed to save API key to localStorage:', error);
+  }
+}
+
+function loadApiKey(): string | null {
+  try {
+    return localStorage.getItem(STORAGE_KEY_API_KEY);
+  } catch (error) {
+    console.error('Failed to load API key from localStorage:', error);
+    return null;
+  }
+}
+
+function clearApiKey(): void {
+  try {
+    localStorage.removeItem(STORAGE_KEY_API_KEY);
+    showToast('Saved API key cleared');
+  } catch (error) {
+    console.error('Failed to clear API key from localStorage:', error);
+  }
+}
+
 // Toast notification
 function showToast(message: string) {
   const toast = document.getElementById('toast');
@@ -408,6 +438,9 @@ document.addEventListener('DOMContentLoaded', () => {
         const apiKey = apiKeyInput.value.trim();
 
         if (apiKey) {
+          // Save API key to localStorage
+          saveApiKey(apiKey);
+
           // Always use empty string for same-origin proxy endpoint
           loadData('', apiKey);
         }
@@ -418,6 +451,29 @@ document.addEventListener('DOMContentLoaded', () => {
   if (retryBtn) {
     retryBtn.addEventListener('click', () => {
       showSection('config-section');
+    });
+  }
+
+  // Auto-populate API key from localStorage if it exists
+  const savedApiKey = loadApiKey();
+  if (savedApiKey) {
+    const apiKeyInput = document.getElementById('api-key') as HTMLInputElement;
+    if (apiKeyInput) {
+      apiKeyInput.value = savedApiKey;
+      showToast('Saved API key loaded');
+    }
+  }
+
+  // Handle clear API key button
+  const clearBtn = document.getElementById('clear-api-key-btn');
+  if (clearBtn) {
+    clearBtn.addEventListener('click', () => {
+      clearApiKey();
+      const apiKeyInput = document.getElementById('api-key') as HTMLInputElement;
+      if (apiKeyInput) {
+        apiKeyInput.value = '';
+        apiKeyInput.focus();
+      }
     });
   }
 });
