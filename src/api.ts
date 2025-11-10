@@ -64,7 +64,7 @@ export class DokployAPI {
 
 export function createDokployAPI(): DokployAPI | null {
   // Try to get API credentials from various sources
-  const apiUrl = import.meta.env.VITE_DOKPLOY_URL || 'https://dokploy.etdofresh.com';
+  const apiUrl = import.meta.env.VITE_DOKPLOY_URL || 'https://app.dokploy.com';
   const apiKey = import.meta.env.VITE_DOKPLOY_API_KEY || '';
 
   if (!apiKey) {
