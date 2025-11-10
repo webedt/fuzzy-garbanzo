@@ -1,4 +1,4 @@
-# Development server with HMR
+# Production server with Express proxy
 FROM node:20-slim
 
 WORKDIR /app
@@ -12,8 +12,14 @@ RUN npm ci
 # Copy source code
 COPY . .
 
-# Expose Vite dev server port
-EXPOSE 5173
+# Build the frontend
+RUN npm run build
 
-# Start Vite dev server with HMR
-CMD ["npm", "run", "dev"]
+# Expose Express server port
+EXPOSE 3000
+
+# Set environment variable for port
+ENV PORT=3000
+
+# Start Express server (serves built frontend and proxies API)
+CMD ["npm", "run", "server"]

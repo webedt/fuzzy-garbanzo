@@ -13,7 +13,10 @@ export class DokployAPI {
 
   async fetchProjects(): Promise<Project[]> {
     try {
-      const response = await fetch(`${this.apiUrl}/api/project.all`, {
+      // Use proxy endpoint on same origin to avoid CORS issues
+      const proxyUrl = `${this.apiUrl}/api/dokploy/project.all`;
+
+      const response = await fetch(proxyUrl, {
         method: 'GET',
         headers: {
           'Accept': 'application/json',
@@ -63,8 +66,9 @@ export class DokployAPI {
 }
 
 export function createDokployAPI(): DokployAPI | null {
-  // Try to get API credentials from various sources
-  const apiUrl = import.meta.env.VITE_DOKPLOY_URL || 'https://app.dokploy.com';
+  // Use empty string for same-origin proxy endpoint
+  // The proxy server will handle forwarding to actual Dokploy instance
+  const apiUrl = '';
   const apiKey = import.meta.env.VITE_DOKPLOY_API_KEY || '';
 
   if (!apiKey) {
