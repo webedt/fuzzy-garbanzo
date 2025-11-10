@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dokploy Server Dashboard</title>
+  <link rel="stylesheet" href="/src/style.css">
+</head>
+<body>
+  <div id="app">
+    <header class="header">
+      <div class="container">
+        <h1 class="title">
+          <svg class="logo" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="2" y="2" width="20" height="8" rx="2" ry="2"></rect>
+            <rect x="2" y="14" width="20" height="8" rx="2" ry="2"></rect>
+            <line x1="6" y1="6" x2="6.01" y2="6"></line>
+            <line x1="6" y1="18" x2="6.01" y2="18"></line>
+          </svg>
+          Dokploy Server Dashboard
+        </h1>
+        <p class="subtitle">Complete overview of your Dokploy infrastructure</p>
+      </div>
+    </header>
+
+    <main class="container">
+      <div id="config-section" class="config-section">
+        <div class="card config-card">
+          <h2>⚙️ API Configuration</h2>
+          <p class="info-text">Enter your Dokploy API key to view your server information.</p>
+          <form id="config-form" class="config-form">
+            <div class="form-group">
+              <label for="api-key">Dokploy API Key</label>
+              <input
+                type="password"
+                id="api-key"
+                placeholder="Enter your Dokploy API key"
+                required
+              />
+              <small class="help-text">Get your API key from Dokploy Settings → Profile → API/CLI Section</small>
+            </div>
+            <button type="submit" class="btn btn-primary">
+              Connect to Dokploy
+            </button>
+          </form>
+        </div>
+      </div>
+
+      <div id="loading-section" class="loading-section" style="display: none;">
+        <div class="loader"></div>
+        <p>Loading your Dokploy data...</p>
+      </div>
+
+      <div id="error-section" class="error-section" style="display: none;">
+        <div class="card error-card">
+          <h2>❌ Error</h2>
+          <p id="error-message"></p>
+          <button id="retry-btn" class="btn btn-secondary">Try Again</button>
+        </div>
+      </div>
+
+      <div id="data-section" class="data-section" style="display: none;">
+        <div class="stats-grid">
+          <div class="stat-card">
+            <div class="stat-icon">📦</div>
+            <div class="stat-value" id="total-projects">0</div>
+            <div class="stat-label">Projects</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon">🚀</div>
+            <div class="stat-value" id="total-applications">0</div>
+            <div class="stat-label">Applications</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon">🗄️</div>
+            <div class="stat-value" id="total-databases">0</div>
+            <div class="stat-label">Databases</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon">🐳</div>
+            <div class="stat-value" id="total-compose">0</div>
+            <div class="stat-label">Docker Compose</div>
+          </div>
+        </div>
+
+        <div id="projects-container"></div>
+      </div>
+    </main>
+
+    <div id="toast" class="toast"></div>
+  </div>
+
+  <script type="module" src="/src/main.ts"></script>
+</body>
+</html>
