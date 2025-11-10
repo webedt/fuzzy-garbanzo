@@ -21,10 +21,10 @@ app.use(express.json());
 app.use(express.static(join(__dirname, 'dist')));
 
 // Proxy endpoint for Dokploy API
-app.all('/api/dokploy/*', async (req, res) => {
+app.all('/api/dokploy/:path(*)', async (req, res) => {
   try {
     // Get the Dokploy endpoint path
-    const dokployPath = req.params[0];
+    const dokployPath = req.params.path;
     const dokployEndpoint = `${DOKPLOY_URL}/api/${dokployPath}`;
 
     console.log(`Proxying request: ${req.method} ${dokployEndpoint}`);
