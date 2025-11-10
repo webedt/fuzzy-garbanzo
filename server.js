@@ -20,11 +20,11 @@ app.use(express.json());
 // Serve static files from dist directory
 app.use(express.static(join(__dirname, 'dist')));
 
-// Proxy endpoint for Dokploy API
-app.all('/api/dokploy/:path(*)', async (req, res) => {
+// Proxy endpoint for Dokploy API - use middleware approach for Express 5
+app.use('/api/dokploy', async (req, res) => {
   try {
-    // Get the Dokploy endpoint path
-    const dokployPath = req.params.path;
+    // Get the Dokploy endpoint path (remove /api/dokploy prefix)
+    const dokployPath = req.path.substring(1); // Remove leading slash
     const dokployEndpoint = `${DOKPLOY_URL}/api/${dokployPath}`;
 
     console.log(`Proxying request: ${req.method} ${dokployEndpoint}`);
