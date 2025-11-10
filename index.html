@@ -27,29 +27,20 @@
       <div id="config-section" class="config-section">
         <div class="card config-card">
           <h2>⚙️ API Configuration</h2>
-          <p class="info-text">Enter your Dokploy API credentials to view your server information.</p>
+          <p class="info-text">Enter your Dokploy API key to view your server information.</p>
           <form id="config-form" class="config-form">
             <div class="form-group">
-              <label for="api-url">API URL</label>
-              <input
-                type="text"
-                id="api-url"
-                placeholder="https://app.dokploy.com"
-                value="https://app.dokploy.com"
-                required
-              />
-            </div>
-            <div class="form-group">
-              <label for="api-key">API Key</label>
+              <label for="api-key">Dokploy API Key</label>
               <input
                 type="password"
                 id="api-key"
-                placeholder="Enter your API key"
+                placeholder="Enter your Dokploy API key"
                 required
               />
+              <small class="help-text">Get your API key from Dokploy Settings → Profile → API/CLI Section</small>
             </div>
             <button type="submit" class="btn btn-primary">
-              Connect to Server
+              Connect to Dokploy
             </button>
           </form>
         </div>

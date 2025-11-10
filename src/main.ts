@@ -402,15 +402,14 @@ document.addEventListener('DOMContentLoaded', () => {
     configForm.addEventListener('submit', (e) => {
       e.preventDefault();
 
-      const apiUrlInput = document.getElementById('api-url') as HTMLInputElement;
       const apiKeyInput = document.getElementById('api-key') as HTMLInputElement;
 
-      if (apiUrlInput && apiKeyInput) {
-        const apiUrl = apiUrlInput.value.trim();
+      if (apiKeyInput) {
         const apiKey = apiKeyInput.value.trim();
 
-        if (apiUrl && apiKey) {
-          loadData(apiUrl, apiKey);
+        if (apiKey) {
+          // Always use empty string for same-origin proxy endpoint
+          loadData('', apiKey);
         }
       }
     });
