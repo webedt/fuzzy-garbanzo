@@ -511,6 +511,42 @@ body {
   background: var(--warning-color);
 }
 
+.domain-link {
+  color: var(--text-secondary);
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+.domain-link:hover {
+  color: var(--primary-light);
+  text-decoration: underline;
+}
+
+/* Primary URL Display */
+.primary-url {
+  padding: 1rem;
+  margin-bottom: 1rem;
+  background: var(--bg-primary);
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  text-align: center;
+}
+
+.url-link {
+  display: inline-block;
+  color: var(--primary-light);
+  font-size: 1rem;
+  font-weight: 500;
+  text-decoration: none;
+  transition: all 0.2s;
+  word-break: break-all;
+}
+
+.url-link:hover {
+  color: var(--primary-color);
+  text-decoration: underline;
+}
+
 /* Toast Notifications */
 .toast {
   position: fixed;
