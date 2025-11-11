@@ -409,9 +409,273 @@ function displayData(projects: Project[]) {
   });
 }
 
+// Interface for ID items
+interface IdItem {
+  id: string;
+  name: string;
+  project?: string;
+  environment?: string;
+}
+
+// Extract all IDs from projects data
+function extractAllIds(projects: Project[]): Record<string, IdItem[]> {
+  const ids: Record<string, IdItem[]> = {
+    projects: [],
+    environments: [],
+    applications: [],
+    compose: [],
+    postgres: [],
+    mysql: [],
+    mariadb: [],
+    mongo: [],
+    redis: [],
+    domains: [],
+    githubIds: [],
+    registryIds: [],
+    serverIds: [],
+  };
+
+  // Use Sets to track unique IDs we've already added
+  const uniqueIds = {
+    githubIds: new Set<string>(),
+    registryIds: new Set<string>(),
+    serverIds: new Set<string>(),
+  };
+
+  projects.forEach(project => {
+    // Add project ID
+    ids.projects.push({
+      id: project.projectId,
+      name: project.name,
+    });
+
+    project.environments.forEach(env => {
+      // Add environment ID
+      ids.environments.push({
+        id: env.environmentId,
+        name: env.name,
+        project: project.name,
+      });
+
+      // Add application IDs
+      env.applications?.forEach(app => {
+        ids.applications.push({
+          id: app.applicationId,
+          name: app.name,
+          project: project.name,
+          environment: env.name,
+        });
+
+        // Add GitHub IDs (deduplicated)
+        if (app.githubId && !uniqueIds.githubIds.has(app.githubId)) {
+          uniqueIds.githubIds.add(app.githubId);
+          ids.githubIds.push({
+            id: app.githubId,
+            name: `GitHub (${app.name})`,
+            project: project.name,
+            environment: env.name,
+          });
+        }
+
+        // Add Registry IDs (deduplicated)
+        if (app.registryId && !uniqueIds.registryIds.has(app.registryId)) {
+          uniqueIds.registryIds.add(app.registryId);
+          ids.registryIds.push({
+            id: app.registryId,
+            name: `Registry (${app.name})`,
+            project: project.name,
+            environment: env.name,
+          });
+        }
+
+        // Add Server IDs (deduplicated)
+        if (app.serverId && !uniqueIds.serverIds.has(app.serverId)) {
+          uniqueIds.serverIds.add(app.serverId);
+          ids.serverIds.push({
+            id: app.serverId,
+            name: `Server (${app.name})`,
+            project: project.name,
+            environment: env.name,
+          });
+        }
+
+        // Add domain IDs
+        app.domains?.forEach(domain => {
+          ids.domains.push({
+            id: domain.domainId,
+            name: domain.host,
+            project: project.name,
+            environment: env.name,
+          });
+        });
+      });
+
+      // Add compose IDs
+      env.compose?.forEach(comp => {
+        ids.compose.push({
+          id: comp.composeId,
+          name: comp.name,
+          project: project.name,
+          environment: env.name,
+        });
+
+        // Add domain IDs from compose
+        comp.domains?.forEach(domain => {
+          ids.domains.push({
+            id: domain.domainId,
+            name: domain.host,
+            project: project.name,
+            environment: env.name,
+          });
+        });
+      });
+
+      // Add database IDs
+      env.postgres?.forEach(db => {
+        ids.postgres.push({
+          id: db.postgresId,
+          name: db.name,
+          project: project.name,
+          environment: env.name,
+        });
+      });
+
+      env.mysql?.forEach(db => {
+        ids.mysql.push({
+          id: db.mysqlId,
+          name: db.name,
+          project: project.name,
+          environment: env.name,
+        });
+      });
+
+      env.mariadb?.forEach(db => {
+        ids.mariadb.push({
+          id: db.mariadbId,
+          name: db.name,
+          project: project.name,
+          environment: env.name,
+        });
+      });
+
+      env.mongo?.forEach(db => {
+        ids.mongo.push({
+          id: db.mongoId,
+          name: db.name,
+          project: project.name,
+          environment: env.name,
+        });
+      });
+
+      env.redis?.forEach(db => {
+        ids.redis.push({
+          id: db.redisId,
+          name: db.name,
+          project: project.name,
+          environment: env.name,
+        });
+      });
+    });
+  });
+
+  // Sort all arrays by name (alphabetically)
+  Object.keys(ids).forEach(key => {
+    ids[key].sort((a, b) => a.name.localeCompare(b.name));
+  });
+
+  return ids;
+}
+
+// Render a single ID section
+function renderIdSection(title: string, icon: string, items: IdItem[], idLabel: string): HTMLElement | null {
+  if (items.length === 0) return null;
+
+  const section = document.createElement('div');
+  section.className = 'resource-section';
+
+  const header = document.createElement('div');
+  header.className = 'resource-header';
+  header.innerHTML = `
+    <span class="resource-title">${icon} ${title}</span>
+    <span class="resource-count">${items.length}</span>
+  `;
+  section.appendChild(header);
+
+  const grid = document.createElement('div');
+  grid.className = 'resource-grid';
+
+  items.forEach(item => {
+    const itemEl = document.createElement('div');
+    itemEl.className = 'resource-item';
+
+    const itemHeader = document.createElement('div');
+    itemHeader.className = 'resource-item-header';
+
+    const nameDiv = document.createElement('div');
+    nameDiv.innerHTML = `
+      <div class="resource-name">${item.name}</div>
+      ${item.project ? `<div class="resource-app-name">${item.project}${item.environment ? ` → ${item.environment}` : ''}</div>` : ''}
+    `;
+
+    itemHeader.appendChild(nameDiv);
+    itemHeader.appendChild(createCopyableId(item.id, idLabel));
+    itemEl.appendChild(itemHeader);
+
+    grid.appendChild(itemEl);
+  });
+
+  section.appendChild(grid);
+  return section;
+}
+
+// Display all IDs
+function displayAllIds(projects: Project[]) {
+  const idsContainer = document.getElementById('ids-container');
+  if (!idsContainer) return;
+
+  // Clear existing content
+  idsContainer.innerHTML = '';
+
+  // Extract all IDs
+  const allIds = extractAllIds(projects);
+
+  // Define sections to render with their metadata
+  const sections = [
+    { key: 'projects', title: 'Projects', icon: '📦', label: 'Project ID' },
+    { key: 'environments', title: 'Environments', icon: '📦', label: 'Environment ID' },
+    { key: 'applications', title: 'Applications', icon: '🚀', label: 'Application ID' },
+    { key: 'compose', title: 'Docker Compose', icon: '🐳', label: 'Compose ID' },
+    { key: 'postgres', title: 'PostgreSQL Databases', icon: '🐘', label: 'Postgres ID' },
+    { key: 'mysql', title: 'MySQL Databases', icon: '🐬', label: 'MySQL ID' },
+    { key: 'mariadb', title: 'MariaDB Databases', icon: '🗄️', label: 'MariaDB ID' },
+    { key: 'mongo', title: 'MongoDB Databases', icon: '🍃', label: 'Mongo ID' },
+    { key: 'redis', title: 'Redis Databases', icon: '🔴', label: 'Redis ID' },
+    { key: 'domains', title: 'Domains', icon: '🌐', label: 'Domain ID' },
+    { key: 'githubIds', title: 'GitHub IDs', icon: '📁', label: 'GitHub ID' },
+    { key: 'registryIds', title: 'Registry IDs', icon: '📦', label: 'Registry ID' },
+    { key: 'serverIds', title: 'Server IDs', icon: '🖥️', label: 'Server ID' },
+  ];
+
+  // Render each section
+  sections.forEach(({ key, title, icon, label }) => {
+    const section = renderIdSection(title, icon, allIds[key], label);
+    if (section) {
+      idsContainer.appendChild(section);
+    }
+  });
+
+  // If no IDs found, show a message
+  if (idsContainer.children.length === 0) {
+    const noDataMsg = document.createElement('div');
+    noDataMsg.className = 'card';
+    noDataMsg.innerHTML = '<p class="info-text">No IDs found. Please connect to Dokploy first.</p>';
+    idsContainer.appendChild(noDataMsg);
+  }
+}
+
 // Show/hide sections
 function showSection(sectionId: string) {
-  const sections = ['config-section', 'loading-section', 'error-section', 'data-section'];
+  const sections = ['config-section', 'loading-section', 'error-section', 'data-section', 'ids-section'];
   sections.forEach(id => {
     const el = document.getElementById(id);
     if (el) {
@@ -429,6 +693,7 @@ function showSection(sectionId: string) {
     'loading-section': 'Loading',
     'error-section': 'Error',
     'data-section': 'Dashboard',
+    'ids-section': 'All IDs',
   };
 
   if (titles[sectionId]) {
@@ -454,6 +719,7 @@ async function loadData(apiUrl: string, apiKey: string) {
     const projects = await api.fetchProjects();
 
     displayData(projects);
+    displayAllIds(projects);
     showSection('data-section');
   } catch (error) {
     console.error('Error loading data:', error);
@@ -480,6 +746,15 @@ function initializeLayout() {
       onClick: () => {
         showSection('data-section');
         updateActiveNavItem('dashboard');
+      },
+    },
+    {
+      id: 'ids',
+      icon: '🔑',
+      title: 'All IDs',
+      onClick: () => {
+        showSection('ids-section');
+        updateActiveNavItem('ids');
       },
     },
     {
