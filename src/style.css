@@ -43,34 +43,7 @@ body {
   padding: 0 2rem;
 }
 
-/* Header */
-.header {
-  background: var(--bg-secondary);
-  border-bottom: 1px solid var(--border-color);
-  padding: 2rem 0;
-  margin-bottom: 2rem;
-}
-
-.title {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  font-size: 2.5rem;
-  font-weight: 700;
-  color: var(--text-primary);
-  margin-bottom: 0.5rem;
-}
-
-.logo {
-  width: 48px;
-  height: 48px;
-  color: var(--primary-color);
-}
-
-.subtitle {
-  color: var(--text-secondary);
-  font-size: 1.1rem;
-}
+/* Old header styles removed - now using header component */
 
 /* Cards */
 .card {
