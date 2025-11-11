@@ -16,7 +16,6 @@
   flex: 1;
   display: flex;
   overflow: hidden;
-  transition: margin-left 0.3s ease;
 }
 
 /* Main Content */
@@ -117,6 +116,10 @@
 
 /* Responsive Design */
 @media (max-width: 768px) {
+  .content-wrapper {
+    flex-direction: column;
+  }
+
   .content {
     padding: 1.5rem;
   }
@@ -139,19 +142,5 @@
 
   .error-card {
     padding: 1rem;
-  }
-}
-
-/* Mobile Sidebar Overlay */
-@media (max-width: 768px) {
-  .app-container:not(.sidebar-collapsed)::before {
-    content: '';
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-color: rgba(0, 0, 0, 0.5);
-    z-index: 999;
   }
 }
