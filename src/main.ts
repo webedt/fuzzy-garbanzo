@@ -7,6 +7,18 @@ import type {
   Compose,
   Domain,
 } from './types';
+import {
+  renderHeader,
+  attachHeaderListeners,
+  updatePageTitle,
+} from './components/header';
+import {
+  renderSidebar,
+  attachSidebarListeners,
+  toggleSidebar,
+  getSidebarState,
+  updateActiveNavItem,
+} from './components/sidebar';
 
 // localStorage key for API key
 const STORAGE_KEY_API_KEY = 'dokploy_api_key';
@@ -403,9 +415,25 @@ function showSection(sectionId: string) {
   sections.forEach(id => {
     const el = document.getElementById(id);
     if (el) {
-      el.style.display = id === sectionId ? 'block' : 'none';
+      if (id === sectionId) {
+        el.classList.add('active');
+      } else {
+        el.classList.remove('active');
+      }
     }
   });
+
+  // Update page title based on section
+  const titles: Record<string, string> = {
+    'config-section': 'Configuration',
+    'loading-section': 'Loading',
+    'error-section': 'Error',
+    'data-section': 'Dashboard',
+  };
+
+  if (titles[sectionId]) {
+    updatePageTitle(titles[sectionId]);
+  }
 }
 
 // Show error
@@ -433,8 +461,57 @@ async function loadData(apiUrl: string, apiKey: string) {
   }
 }
 
+// Initialize layout
+function initializeLayout() {
+  const headerContainer = document.getElementById('header-container');
+  const sidebarContainer = document.getElementById('sidebar-container');
+  const appContainer = document.querySelector('.app-container');
+
+  if (headerContainer) {
+    headerContainer.innerHTML = renderHeader();
+    attachHeaderListeners(toggleSidebar);
+  }
+
+  const navItems = [
+    {
+      id: 'dashboard',
+      icon: '📊',
+      title: 'Dashboard',
+      onClick: () => {
+        showSection('data-section');
+        updateActiveNavItem('dashboard');
+      },
+    },
+    {
+      id: 'config',
+      icon: '⚙️',
+      title: 'Configuration',
+      onClick: () => {
+        showSection('config-section');
+        updateActiveNavItem('config');
+      },
+    },
+  ];
+
+  if (sidebarContainer) {
+    sidebarContainer.innerHTML = renderSidebar(navItems);
+    attachSidebarListeners();
+  }
+
+  // Apply initial collapsed state
+  if (appContainer && getSidebarState()) {
+    appContainer.classList.add('sidebar-collapsed');
+  }
+
+  // Set initial active nav item
+  updateActiveNavItem('config');
+}
+
 // Initialize
 document.addEventListener('DOMContentLoaded', () => {
+  // Initialize layout components
+  initializeLayout();
+
   const configForm = document.getElementById('config-form') as HTMLFormElement;
   const retryBtn = document.getElementById('retry-btn');
 
@@ -461,6 +538,7 @@ document.addEventListener('DOMContentLoaded', () => {
   if (retryBtn) {
     retryBtn.addEventListener('click', () => {
       showSection('config-section');
+      updateActiveNavItem('config');
     });
   }
 

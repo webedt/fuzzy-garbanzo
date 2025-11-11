@@ -1,0 +1,154 @@
+/**
+ * Layout Styles
+ * Main application layout structure
+ */
+
+/* App Container */
+.app-container {
+  height: 100vh;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Remove any spacing from container divs */
+#header-container,
+#sidebar-container {
+  margin: 0;
+  padding: 0;
+  display: contents;
+}
+
+/* Content Wrapper */
+.content-wrapper {
+  flex: 1;
+  display: flex;
+  overflow: hidden;
+}
+
+/* Main Content */
+.content {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 2rem;
+  background: #ffffff;
+}
+
+@media (prefers-color-scheme: dark) {
+  .content {
+    background: #1a1a1a;
+  }
+}
+
+/* Page Container */
+.page-container {
+  max-width: 1280px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+/* Section Visibility */
+.section {
+  display: none;
+}
+
+.section.active {
+  display: block;
+}
+
+/* Config Section */
+#configSection {
+  max-width: 500px;
+  margin: 2rem auto;
+  padding: 2rem;
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 12px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+@media (prefers-color-scheme: dark) {
+  #configSection {
+    background: rgba(30, 30, 30, 0.95);
+  }
+}
+
+/* Loading Section */
+#loadingSection {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 200px;
+}
+
+/* Error Section */
+#errorSection {
+  max-width: 600px;
+  margin: 2rem auto;
+}
+
+.error-card {
+  background: rgba(255, 0, 0, 0.1);
+  border: 1px solid rgba(255, 0, 0, 0.3);
+  border-radius: 8px;
+  padding: 1.5rem;
+}
+
+.error-message {
+  color: #d32f2f;
+  font-weight: 500;
+  margin-bottom: 1rem;
+}
+
+@media (prefers-color-scheme: dark) {
+  .error-message {
+    color: #ff5252;
+  }
+}
+
+/* Data Section */
+#dataSection {
+  animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .content-wrapper {
+    flex-direction: column;
+  }
+
+  .content {
+    padding: 1.5rem;
+  }
+
+  #configSection {
+    margin: 1rem;
+    padding: 1.5rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .content {
+    padding: 1rem;
+  }
+
+  #configSection {
+    margin: 0.5rem;
+    padding: 1rem;
+  }
+
+  .error-card {
+    padding: 1rem;
+  }
+}
