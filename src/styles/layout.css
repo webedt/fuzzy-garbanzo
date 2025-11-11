@@ -11,6 +11,14 @@
   flex-direction: column;
 }
 
+/* Remove any spacing from container divs */
+#header-container,
+#sidebar-container {
+  margin: 0;
+  padding: 0;
+  display: contents;
+}
+
 /* Content Wrapper */
 .content-wrapper {
   flex: 1;
